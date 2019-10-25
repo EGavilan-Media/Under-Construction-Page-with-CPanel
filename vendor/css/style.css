@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    margin: 0;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    color: #fff;
+    background: #333;
+    overflow: hidden;
+  }
+  
+  .landing-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding-top: 50px;
+  }
+  
+  .landing {
+    position: relative;
+    background-image: url('../img/showcase.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+  }
+
+  img {
+    width: 10%;
+  }
+  
+  .landing h1 {
+    font-size: 50px;
+  }
+  
+  .landing p {
+    font-size: 20px;
+  }
+  
+  .countdown {
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 100px;
+  }
+  
+  .countdown div {
+    padding: 20px;
+    border: 1px #fff solid;
+    border-radius: 10px;
+    background: #000;
+    opacity: 0.7;
+    margin: 5px;
+  }
+
+  .countdown span {
+    display: block;
+    font-size: 25px;
+  }
+
+  .submit-button {
+    background-color: #073863;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[type=email] {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+  }
+  .error-color{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .fa {
+    padding: 10px;
+    font-size: 15px;
+    width: 35px;
+    text-align: center;
+    text-decoration: none;
+    margin: 5px 2px;
+    border-radius: 50%;
+  }
+  
+  .fa:hover {
+      opacity: 0.7;
+  }
+  
+  .fa-facebook {
+    background: #3B5998;
+    color: white;
+  }
+  
+  .fa-twitter {
+    background: #55ACEE;
+    color: white;
+  }
+  
+  .fa-youtube {
+    background: #bb0000;
+    color: white;
+  }
+  @media (max-width: 650px) {
+    .landing img {
+      width: 10%;
+    }
+  
+    .landing h1 {
+      font-size: 40px;
+    }
+  
+    .countdown {
+      font-size: 30px;
+      flex-direction: column;
+    }
+  
+    .countdown div {
+      display: none;
+    }
+  
+    .countdown div:first-child {
+      display: block;
+      width: 80%;
+      padding: 10px;
+    }
+  }
+  
+  
+  @media (max-height: 600px) {
+    img {
+      width: 10%;
+    }
+
+  }
+  
+  @media (max-height: 400px) {
+    .landing img {
+      width: 30%;
+    }
+
+  }
+

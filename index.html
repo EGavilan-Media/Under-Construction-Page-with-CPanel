@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- style-->
+    <link rel="stylesheet" href="vendor/css/style.css">
+    <!-- favicon-->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.jpg">
+    <!-- jQuery library -->
+    <script src="vendor/jquery-3.4.1.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Comming Soon</title>
+</head>
+
+<body>
+    <section class="landing">
+        <div class="landing-inner">
+            <img src="img/profile.jpg" />
+            <p>Web Design and Development</p>
+            <div>
+                <h1 id="viewTitle"></h1>
+            </div>
+            <div>
+                <p id="viewDescription"></p>
+            </div>
+            <div class="countdown"></div>
+            <div>
+                <form id="form-subscriber">
+                    <input type="email" id="email" name="email" placeholder="Enter your e-mail address" maxlength="50">
+                    <button type='button' id='btnAdd' class='submit-button'>Subscribe</button>
+                    <div id="email_error_message" class="error-color"></div>
+                </form>
+            </div>
+            <div>
+                <a id="facebook" class="fa fa-facebook"></a>
+                <a id="twitter" class="fa fa-twitter"></a>
+                <a id="youtube" class="fa fa-youtube"></a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
+<script>
+
+    $(document).ready(function () {
+
+        function clear_field() {
+            $('#form-subscriber')[0].reset();
+        }
+
+        $('#btnAdd').click(function () {
+            subscriber();
+        });
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                subscriber();
+            }
+        });
+
+        timer();
+
+        var error_email = false;
+
+        $("#email").focusout(function () {
+            check_email();
+        });
+
+        function check_email() {
+
+            var pattern = new RegExp(/^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i);
+            var email_length = $("#email").val().length;
+
+            if ($.trim($('#email').val()) == '') {
+                $("#email_error_message").html("Input is blank!");
+                $("#email_error_message").show();
+                error_email = true;
+            } else if (!(pattern.test($("#email").val()))) {
+                $("#email_error_message").html("Invalid email address!");
+                $("#email_error_message").show();
+                error_email = true;
+            } else {
+                error_email = false;
+                $("#email_error_message").hide();
+            }
+        }
+
+        function subscriber() {
+
+            error_email = false;
+
+            check_email();
+
+            if (error_email == false) {
+
+                email = $('#email').val();
+                $.ajax({
+                    type: "POST",
+                    data: { email, action: 'add' },
+                    url: "construction_action.php",
+                    success: function (data) {
+                        if (data == 1) {
+                            alert("Success! You are now subscribed.");
+                            clear_field();
+                        } else if (data == 0) {
+                            $("#email_error_message").html("This email is already registered.");
+                            $("#email_error_message").show();
+                        } else {
+                            alert("Oops! Something went wrong.");
+                        }
+                    }
+                });
+                return false;
+            }
+        }
+
+        function timer() {
+
+            $.ajax({
+                type: "POST",
+                data: { action: 'fetch' },
+                url: "construction_action.php",
+                success: function (data) {
+
+                    var data = JSON.parse(data);
+
+                    var date = data['date'];
+                    var hour = data['hour'];
+                    var minute = data['minute'];
+                    var second = data['second'];
+                    var title = data['title'];
+                    var description = data['description'];
+                    var facebook = data['facebook'];
+                    var twitter = data['twitter'];
+                    var youtube = data['youtube'];
+
+                    var eventDate = date + ' ' + hour + ':' + minute + ':' + second;
+
+                    const countdown = document.querySelector('.countdown');
+
+                    // Display title
+                    $('#viewTitle').text(data['title']);
+
+                    // Display description
+                    $('#viewDescription').text(data['description']);
+
+                    // Social Network
+                    document.getElementById("facebook").href = facebook;
+                    document.getElementById("facebook").target = "_blank";
+                    document.getElementById("twitter").href = twitter;
+                    document.getElementById("twitter").target = "_blank";
+                    document.getElementById("youtube").href = youtube;
+                    document.getElementById("youtube").target = "_blank";
+
+                    // Set Launch Date (ms)
+                    const launchDate = new Date(eventDate).getTime();
+
+                    // Update every second
+                    const intvl = setInterval(() => {
+
+                        // Get todays date and time (ms)
+                        const now = new Date().getTime();
+
+                        // Distance from now and the launch date (ms)
+                        const distance = launchDate - now;
+
+                        // Time calculation
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        // Display result
+                        countdown.innerHTML = `
+                        <div>${days}<span>Days</span></div> 
+                        <div>${hours}<span>Hours</span></div>
+                        <div>${mins}<span>Minutes</span></div>
+                        <div>${seconds}<span>Seconds</span></div>
+                        `;
+
+                        // If launch date is reached
+                        if (distance < 0) {
+                            // Stop countdown
+                            clearInterval(intvl);
+                            // Style and output text
+                            countdown.style.color = '#17a2b8';
+                            countdown.innerHTML = 'Launched!';
+                        }
+                    }, 1000);
+                }
+            });
+        }
+    });
+</script>
